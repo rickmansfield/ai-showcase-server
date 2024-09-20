@@ -54,5 +54,5 @@ app.post('/sentiment', (req, res) => {
 
 // Start the server and listen for requests
 app.listen(port, () => {
-  console.log(`NLP server running on port ${port}`);
+  console.log(`ai-showcase server running on port ${port}`);
 });
