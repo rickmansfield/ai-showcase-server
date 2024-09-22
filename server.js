@@ -11,7 +11,11 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 
 // Enable CORS for all routes: This allows the client to make requests to the server from a different domain. The CORS middleware adds the Access-Control-Allow-Origin header to your responses, which tells the browser that your server allows cross-origin requests
-app.use(cors());
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
+
 
 // Example route for NLP sentiment analysis (original)
 app.post('/analyze-sentiment', (req, res) => {
