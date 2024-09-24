@@ -25,7 +25,8 @@ app.use(bodyParser.json());
 // Conditionally apply CORS middleware based on environment
 if (process.env.NODE_ENV === 'production') {
   app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Origin", "https://ai-showcase-git-deployment-1-william-mansfields-projects.vercel.app");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
   });
 } else {
