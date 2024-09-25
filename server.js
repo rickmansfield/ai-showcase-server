@@ -1,22 +1,41 @@
 // Comments in this file are for perspective clients and employers to demonstrate my understanding of the code and help the reader understand my thought process.
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const natural = require('natural');
 const Sentiment = require('sentiment'); 
 const cors = require('cors');
+const helmet = require('helmet'); 
 const app = express();
 const port = process.env.PORT || 5000;
+
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://vercel.live"],
+      // Add other directives as needed
+    },
+  },
+}));
 
 // Middleware to parse incoming requests. i.e. JSON data/bodies
 app.use(bodyParser.json());
 
-// Enable CORS for all routes: This allows the client to make requests to the server from a different domain. The CORS middleware adds the Access-Control-Allow-Origin header to your responses, which tells the browser that your server allows cross-origin requests
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  next();
+// Conditionally apply CORS middleware based on environment
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "https://ai-showcase-git-deployment-1-william-mansfields-projects.vercel.app");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+} else {
+  app.use(cors());
+}
+// Handle root URL
+app.get('/', (req, res) => {
+  res.send('Welcome to the AI Showcase Server');
 });
-
-
 // Example route for NLP sentiment analysis (original)
 app.post('/analyze-sentiment', (req, res) => {
   const { text } = req.body;
