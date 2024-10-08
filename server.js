@@ -25,17 +25,14 @@ app.use(bodyParser.json());
 // Conditionally apply CORS middleware based on environment
 if (process.env.NODE_ENV === 'production') {
   app.use((req, res, next) => {
-    const allowedOrigins = ['https://ai-showcase-server.vercel.app', 'http://localhost:3000'];
-    const origin = req.headers.origin;
-    if (allowedOrigins.includes(origin)) {
-      res.header("Access-Control-Allow-Origin", origin);
-    }
+    res.header("Access-Control-Allow-Origin", "*"); // Allow all origins
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
   });
 } else {
   app.use(cors());
 }
+
 // Handle root URL
 app.get('/', (req, res) => {
   res.send('Welcome to the AI Showcase Server');
@@ -44,7 +41,7 @@ app.get('/', (req, res) => {
 app.post('/analyze-sentiment', (req, res) => {
   const { text } = req.body;
   if (!text) {
-    return res.status(400).send('No text provided');
+    return res.status(400).json({ error: 'No text provided' });
   }
 
   // Using the natural package for basic sentiment analysis
